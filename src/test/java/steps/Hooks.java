@@ -18,8 +18,13 @@ public class Hooks {
     public void setUp() {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
-        // Remove "--headless" below to see the browser during the demo
-        // options.addArguments("--headless");
+        // Uncomment to run headless locally; CI sets HEADLESS=true automatically
+        if ("true".equalsIgnoreCase(System.getenv("HEADLESS"))) {
+            options.addArguments("--headless=new");
+        }
+        // Required for Chrome in sandboxed CI environments (GitHub Actions, Docker)
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--window-size=1280,800");
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
